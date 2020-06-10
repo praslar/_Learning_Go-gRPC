@@ -1,0 +1,88 @@
+syntax = "proto3";
+package v1;
+option go_package="pkg/api/v1";
+import "google/protobuf/timestamp.proto";
+
+service ToDoService {
+    // Create new todo task
+    rpc Create(CreateRequest) returns (CreateRespone) {};
+
+    // Read todo task
+    rpc Read(ReadRequest) returns (ReadResponse);
+
+    // Update todo task
+    rpc Update(UpdateRequest) returns (UpdateResponse);
+
+    // Delete todo task
+    rpc Delete(DeleteRequest) returns (DeleteResponse);
+
+    // Read all todo tasks
+    rpc ReadAll(ReadAllRequest) returns (ReadAllResponse);
+}
+
+message CreateRequest {
+    // Best practice to specify the version explicity
+    string api = 1;
+    ToDo todo = 2;
+}
+
+message CreateRespone {
+    string api = 1;
+      // Return todo ID if created successful
+    string id = 2;
+}
+
+message ReadRequest {
+    string api = 1;
+    string id = 2;
+}
+
+message ReadResponse {
+    string api = 1;
+    ToDo todo = 2;
+
+}
+
+message UpdateRequest {
+    string api = 1;
+    ToDo todo = 2;
+}
+
+message UpdateResponse {
+    string api = 1;
+    // Contains number of entities have been updated
+    // Equals 1 in case of succesfull update
+    int64 updated = 2;
+}
+
+message DeleteRequest{
+    string api = 1;
+    string id = 2;
+}
+
+// Contains status of delete operation
+message DeleteResponse{
+    string api = 1;
+    // Contains number of entities have beed deleted
+    // Equals 1 in case of succesfull delete
+    int64 deleted = 2;
+}
+
+message ReadAllRequest{
+    string api = 1;
+}
+
+message ReadAllResponse{
+    string api = 1;
+    repeated ToDo toDos = 2;
+}
+
+
+message ToDo {
+    // Id generate with google/uuid.new().string()
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    // Special data type from google/protobuf
+    google.protobuf.Timestamp reminder = 4;
+}
