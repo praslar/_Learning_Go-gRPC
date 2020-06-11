@@ -8,13 +8,13 @@ import (
 	"os/signal"
 
 	v1 "github.com/praslar/to-do-list-micro/pkg/api/v1"
+
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
 )
 
 // RunServer run gRPC service server to publish  ToDO services
-func RunServer(ctx context.Context, creds credentials.TransportCredentials, api v1.ToDoServiceServer, port string) error {
+func RunServer(ctx context.Context, opts []grpc.ServerOption, api v1.ToDoServiceServer, port string) error {
 
 	listen, err := net.Listen("tcp", ":"+port)
 	if err != nil {
@@ -22,7 +22,8 @@ func RunServer(ctx context.Context, creds credentials.TransportCredentials, api 
 	}
 	// Register new grpc Server
 	// With creds for SSL
-	server := grpc.NewServer(grpc.Creds(creds))
+	// This creds with be complie from use input --certca --...
+	server := grpc.NewServer(opts...)
 	// Register refelction service for Evans CLI
 	reflection.Register(server)
 	// Register service

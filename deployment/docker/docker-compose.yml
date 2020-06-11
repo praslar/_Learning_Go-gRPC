@@ -9,6 +9,11 @@ services:
     volumes:
       - /opt/data/mongo_home:/data/db
     restart: always
+    environment:
+      # DB
+      - MONGODB_ADDRS=${MONGODB_ADDRS}
+      - MONGODB_DATABASE=${MONGODB_DATABASE}
+      - MONGODB_TIMEOUT=${MONGODB_TIMEOUT}
 
   server:
     image: "gogodo:${BUILD_VERSION}"
@@ -21,7 +26,7 @@ services:
       - MONGODB_DATABASE=${MONGODB_DATABASE}
       - MONGODB_TIMEOUT=${MONGODB_TIMEOUT}
     entrypoint:
-      ["sh","-c","./gogodo.bin",]
+      ["sh","-c","./gogodo.bin --tls",]
     depends_on:
       - mongodb
     restart: always

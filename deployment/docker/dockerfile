@@ -4,8 +4,6 @@ WORKDIR /home/
 COPY gogodo.bin ./
 RUN chmod +x  gogodo.bin
 
-COPY ssl ./ssl
-
 EXPOSE 8080
 CMD ["./gogodo.bin"]
 
