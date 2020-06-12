@@ -1,0 +1,11 @@
+FROM alpine:3.8
+
+WORKDIR /home/
+COPY gogodo-client.bin ./
+RUN chmod +x  gogodo-client.bin
+
+COPY ca.crt ./ca.crt
+
+EXPOSE 8080
+CMD ["./gogodo-client.bin"]
+

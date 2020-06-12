@@ -19,14 +19,29 @@ services:
     image: "gogodo:${BUILD_VERSION}"
     hostname: gogodo
     ports:
-      - "8080:8080"
+      - "50051:50051"
     environment:
       # DB
       - MONGODB_ADDRS=${MONGODB_ADDRS}
       - MONGODB_DATABASE=${MONGODB_DATABASE}
       - MONGODB_TIMEOUT=${MONGODB_TIMEOUT}
     entrypoint:
-      ["sh","-c","./gogodo.bin --tls --key_file=\"server.pem\" --cert_file=\"server.crt\"",]
+      #"
+      ["sh","-c","./gogodo.bin"]
+
     depends_on:
       - mongodb
+    restart: always
+
+  client:
+    image: "gogodo-client:${BUILD_VERSION}"
+    hostname: gogodo-client
+    environment:
+      # DB
+      - SERVER_ADDRS=${SERVER_ADDRS}
+    entrypoint:
+      # --tls --key_file=\"server.pem\" --cert_file=\"server.crt\""
+      ["sh","-c","./gogodo-client.bin --server=\"server:50051\""]
+    depends_on:
+      - server
     restart: always

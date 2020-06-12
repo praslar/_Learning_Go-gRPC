@@ -2,12 +2,13 @@ package grpc
 
 import (
 	"context"
-	"log"
 	"net"
 	"os"
 	"os/signal"
 
 	v1 "github.com/praslar/to-do-list-micro/pkg/api/v1"
+	"github.com/praslar/to-do-list-micro/pkg/logger"
+	"github.com/praslar/to-do-list-micro/pkg/protocol/grpc/middleware"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -15,11 +16,12 @@ import (
 
 // RunServer run gRPC service server to publish  ToDO services
 func RunServer(ctx context.Context, opts []grpc.ServerOption, api v1.ToDoServiceServer, port string) error {
-
-	listen, err := net.Listen("tcp", ":"+port)
+	listen, err := net.Listen("tcp", "localhost:"+port)
 	if err != nil {
 		return err
 	}
+
+	opts = middleware.AddLogging(logger.Log, opts)
 	// Register new grpc Server
 	// With creds for SSL
 	// This creds with be complie from use input --certca --...
@@ -35,8 +37,7 @@ func RunServer(ctx context.Context, opts []grpc.ServerOption, api v1.ToDoService
 	go func() {
 		for range c {
 			// signal is a Ctrl+C, handle it
-			log.Println("shutting down gRPC server...")
-
+			logger.Log.Warn("shutting down gRPC server...")
 			server.GracefulStop()
 
 			<-ctx.Done()
@@ -44,6 +45,6 @@ func RunServer(ctx context.Context, opts []grpc.ServerOption, api v1.ToDoService
 	}()
 
 	// start gRPC server
-	log.Println("starting gRPC server...")
+	logger.Log.Info("starting gRPC server on " + listen.Addr().String())
 	return server.Serve(listen)
 }
