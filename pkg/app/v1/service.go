@@ -54,7 +54,6 @@ func (s *toDoServiceServer) Read(ctx context.Context, req *v1.ReadRequest) (*v1.
 		Api:  apiVersion,
 		Todo: nil,
 	}, nil
-
 }
 
 // Update todo task

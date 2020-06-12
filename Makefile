@@ -34,7 +34,8 @@ protoc:
 
 docker_prebuild: vet build
 	mv $(PROJECT_NAME)-$(BUILD_VERSION).bin deployment/docker/$(PROJECT_NAME).bin; \
-
+	cp -R configs/ssl/server.crt deployment/docker/;
+	cp -R configs/ssl/server.pem deployment/docker/;
 docker_build:
 	cd deployment/docker; \
 	docker build -t $(DOCKER_IMAGE) .;

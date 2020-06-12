@@ -26,7 +26,7 @@ services:
       - MONGODB_DATABASE=${MONGODB_DATABASE}
       - MONGODB_TIMEOUT=${MONGODB_TIMEOUT}
     entrypoint:
-      ["sh","-c","./gogodo.bin --tls",]
+      ["sh","-c","./gogodo.bin --tls --key_file=\"server.pem\" --cert_file=\"server.crt\"",]
     depends_on:
       - mongodb
     restart: always

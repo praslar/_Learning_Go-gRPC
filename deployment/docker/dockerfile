@@ -4,6 +4,9 @@ WORKDIR /home/
 COPY gogodo.bin ./
 RUN chmod +x  gogodo.bin
 
+COPY server.crt ./server.crt
+COPY server.pem ./server.pem
+
 EXPOSE 8080
 CMD ["./gogodo.bin"]
 
